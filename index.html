@@ -1,10 +1,26 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="light">
 <head>
  <meta charset="UTF-8">
  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
  <title>Precision Ruler MVP</title>
  <script src="https://cdn.tailwindcss.com"></script>
+ <script>
+ tailwind.config = {
+ darkMode: 'class',
+ theme: {
+ extend: {
+ colors: {
+ dark: {
+ bg: '#0f0f0f',
+ surface: '#1a1a1a',
+ border: '#2a2a2a'
+ }
+ }
+ }
+ }
+ }
+ </script>
  <style>
  body { 
  touch-action: none; 
@@ -14,54 +30,63 @@
  }
  .tick {
  position: absolute;
- background-color: #1f2937;
  }
  .label {
  position: absolute;
  font-size: 10px;
- color: #4b5563;
  display: flex;
  align-items: center;
  justify-content: center;
  }
- /* Vertical label rotation */
  .v-label {
  transform: translateY(-50%) rotate(-90deg);
  }
  .h-label {
  transform: translateX(-50%);
  }
+ /* Light mode */
+ html:not(.dark) .tick { background-color: #1f2937; }
+ html:not(.dark) .label { color: #4b5563; }
+ /* Dark mode */
+ html.dark .tick { background-color: #e5e5e5; }
+ html.dark .label { color: #a3a3a3; }
+ html.dark { background-color: #0f0f0f; }
  </style>
 </head>
-<body class="bg-gray-50 h-screen flex flex-col">
+<body class="bg-gray-50 dark:bg-dark-bg h-screen flex flex-col transition-colors duration-200">
 
  <!-- Header -->
- <header class="p-4 bg-white border-b border-gray-200 flex justify-between items-center z-20 shrink-0">
+ <header class="p-4 bg-white dark:bg-dark-surface border-b border-gray-200 dark:border-dark-border flex justify-between items-center z-20 shrink-0 transition-colors duration-200">
  <div>
- <h1 class="text-lg font-bold text-gray-900 leading-tight">L-Ruler</h1>
- <p id="device-name" class="text-[10px] text-gray-500 uppercase tracking-wider font-medium">Detecting...</p>
+ <h1 class="text-lg font-bold text-gray-900 dark:text-white leading-tight">L-Ruler</h1>
+ <p id="device-name" class="text-[10px] text-gray-500 dark:text-gray-400 uppercase tracking-wider font-medium">Detecting...</p>
  </div>
- <button onclick="toggleUnits()" id="unit-btn" class="px-4 py-1.5 bg-gray-900 text-white rounded-full text-xs font-bold shadow-sm active:scale-95 transition-transform">
+ <div class="flex gap-2">
+ <button onclick="toggleDarkMode()" id="dark-btn" class="px-3 py-1.5 bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-200 rounded-full text-xs font-bold shadow-sm active:scale-95 transition-transform">
+ 🌙
+ </button>
+ <button onclick="toggleUnits()" id="unit-btn" class="px-4 py-1.5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-full text-xs font-bold shadow-sm active:scale-95 transition-transform">
  Switch to Inches
  </button>
+ </div>
  </header>
 
  <!-- Ruler Area -->
- <main class="flex-grow relative bg-white overflow-hidden">
+ <main class="flex-grow relative bg-white dark:bg-dark-bg overflow-hidden transition-colors duration-200">
  <!-- Vertical Ruler Container -->
- <div id="ruler-v" class="absolute left-0 top-0 bottom-0 w-12 border-r border-gray-100 bg-gray-50/30"></div>
+ <div id="ruler-v" class="absolute left-0 top-0 bottom-0 w-12 border-r border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200"></div>
  <!-- Horizontal Ruler Container -->
- <div id="ruler-h" class="absolute top-0 left-0 right-0 h-12 border-b border-gray-100 bg-gray-50/30"></div>
+ <div id="ruler-h" class="absolute top-0 left-0 right-0 h-12 border-b border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200"></div>
  
  <!-- Center intersection helper -->
- <div class="absolute top-0 left-0 w-12 h-12 bg-gray-100/50 z-10 border-b border-r border-gray-200"></div>
+ <div class="absolute top-0 left-0 w-12 h-12 bg-gray-100/50 dark:bg-white/10 z-10 border-b border-r border-gray-200 dark:border-dark-border transition-colors duration-200"></div>
  </main>
 
  <!-- Calibration Footer -->
- <footer id="calibration-ui" class="p-4 bg-white border-t border-gray-200 hidden shrink-0">
+ <footer id="calibration-ui" class="p-4 bg-white dark:bg-dark-surface border-t border-gray-200 dark:border-dark-border hidden shrink-0 transition-colors duration-200">
  <div class="flex flex-col gap-2">
- <label class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Calibration Offset</label>
- <input type="range" id="manual-scale" min="0.8" max="1.2" step="0.001" value="1" class="w-full h-1.5 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600">
+ <label class="text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest">Calibration Offset</label>
+ <input type="range" id="manual-scale" min="0.8" max="1.2" step="0.001" value="1" class="w-full h-1.5 bg-gray-200 dark:bg-gray-700 rounded-lg appearance-none cursor-pointer accent-blue-600 dark:accent-blue-400">
  </div>
  </footer>
 
@@ -80,10 +105,26 @@
 
  let state = {
  isMetric: true,
+ isDark: false,
  ppi: 460,
  dpr: window.devicePixelRatio || 1,
  manualScale: 1
  };
+
+ // Load dark mode preference
+ if (localStorage.getItem('darkMode') === 'true' || 
+ (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+ state.isDark = true;
+ document.documentElement.classList.add('dark');
+ document.getElementById('dark-btn').innerText = '☀️';
+ }
+
+ function toggleDarkMode() {
+ state.isDark = !state.isDark;
+ document.documentElement.classList.toggle('dark');
+ document.getElementById('dark-btn').innerText = state.isDark ? '☀️' : '🌙';
+ localStorage.setItem('darkMode', state.isDark);
+ }
 
  function detectDevice() {
  const w = Math.min(window.screen.width, window.screen.height);
@@ -122,7 +163,7 @@
  tick.style.width = '1px';
  tick.style.height = `${height}px`;
  }
- if (isMajor) tick.style.backgroundColor = '#000';
+ if (isMajor) tick.classList.add('bg-black', 'dark:bg-white');
  return tick;
  }
 
