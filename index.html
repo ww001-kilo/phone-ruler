@@ -202,6 +202,8 @@
  if (i % subDivisions === 0) {
  height = 30;
  isMajor = true;
+ // Skip label for 0 to keep it clean
+ if (i > 0) {
  const label = document.createElement('div');
  label.className = `label ${isVertical ? 'v-label' : 'h-label'}`;
  if (isVertical) {
@@ -213,6 +215,7 @@
  }
  label.innerText = i / subDivisions;
  container.appendChild(label);
+ }
  } else if (i % (subDivisions/2) === 0) {
  height = 18;
  } else if (i % (subDivisions/4) === 0) {
