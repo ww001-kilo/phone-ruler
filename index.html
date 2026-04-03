@@ -192,6 +192,9 @@
  }
 
  function draw(container, unitPx, limit, isVertical, subDivisions) {
+ // Corner zone size (matches the intersection helper div)
+ const CORNER_SIZE = 12;
+ 
  for (let i = 0; i <= (limit / unitPx); i++) {
  const pos = i * unitPx;
  if (pos > limit) break;
@@ -220,6 +223,12 @@
  height = 18;
  } else if (i % (subDivisions/4) === 0) {
  height = 12;
+ }
+
+ // Skip ticks in the corner intersection zone (first 12px)
+ // This creates a clean carpenter's square corner
+ if (pos < CORNER_SIZE) {
+ continue;
  }
 
  container.appendChild(createTick(isVertical, pos, height, isMajor));
