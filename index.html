@@ -75,12 +75,12 @@
  <!-- Ruler Area -->
  <main class="flex-grow relative bg-white dark:bg-dark-bg overflow-hidden transition-colors duration-200">
  <!-- Vertical Ruler Container -->
- <div id="ruler-v" class="absolute left-0 top-0 bottom-0 w-12 border-r border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200"></div>
+ <div id="ruler-v" class="absolute left-0 top-0 bottom-0 border-r border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200" style="width: 50px;"></div>
  <!-- Horizontal Ruler Container -->
- <div id="ruler-h" class="absolute top-0 left-0 right-0 h-12 border-b border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200"></div>
+ <div id="ruler-h" class="absolute top-0 left-0 right-0 border-b border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200" style="height: 50px;"></div>
  
  <!-- Center intersection helper -->
- <div class="absolute top-0 left-0 w-12 h-12 bg-gray-100/50 dark:bg-white/10 z-10 border-b border-r border-gray-200 dark:border-dark-border transition-colors duration-200"></div>
+ <div class="absolute top-0 left-0 bg-gray-100/50 dark:bg-white/10 z-10 border-b border-r border-gray-200 dark:border-dark-border transition-colors duration-200" style="width: 50px; height: 50px;"></div>
  </main>
 
  <!-- Calibration Footer -->
@@ -192,18 +192,18 @@
  }
 
  function draw(container, unitPx, limit, isVertical, subDivisions) {
- // Corner zone size (matches the intersection helper div)
- const CORNER_SIZE = 12;
+ // Corner zone size (50px)
+ const CORNER_SIZE = 50;
  
  for (let i = 0; i <= (limit / unitPx); i++) {
  const pos = i * unitPx;
  if (pos > limit) break;
 
- let height = 8;
+ let height = 10;
  let isMajor = false;
 
  if (i % subDivisions === 0) {
- height = 30;
+ height = 35;
  isMajor = true;
  // Skip label for 0 to keep it clean
  if (i > 0) {
@@ -211,21 +211,21 @@
  label.className = `label ${isVertical ? 'v-label' : 'h-label'}`;
  if (isVertical) {
  label.style.top = `${pos}px`;
- label.style.left = '35px';
+ label.style.left = '38px';
  } else {
  label.style.left = `${pos}px`;
- label.style.top = '35px';
+ label.style.top = '38px';
  }
  label.innerText = i / subDivisions;
  container.appendChild(label);
  }
  } else if (i % (subDivisions/2) === 0) {
- height = 18;
+ height = 22;
  } else if (i % (subDivisions/4) === 0) {
- height = 12;
+ height = 15;
  }
 
- // Skip ticks in the corner intersection zone (first 12px)
+ // Skip ticks in the corner intersection zone (first 50px)
  // This creates a clean carpenter's square corner
  if (pos < CORNER_SIZE) {
  continue;
