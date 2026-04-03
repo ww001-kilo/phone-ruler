@@ -209,7 +209,7 @@
  let isMajor = false;
 
  if (i % subDivisions === 0) {
- height = 30;
+ height = CORNER_SIZE * 0.7; // Tick height proportional to ruler width
  isMajor = true;
  // Skip label for 0 to keep it clean
  if (i > 0) {
@@ -217,18 +217,20 @@
  label.className = `label ${isVertical ? 'v-label' : 'h-label'}`;
  if (isVertical) {
  label.style.top = `${pos}px`;
- label.style.left = `${CORNER_SIZE + 8}px`;
+ label.style.right = '2px';
+ label.style.left = 'auto';
  } else {
  label.style.left = `${pos}px`;
- label.style.top = `${CORNER_SIZE + 8}px`;
+ label.style.bottom = '2px';
+ label.style.top = 'auto';
  }
  label.innerText = i / subDivisions;
  container.appendChild(label);
  }
  } else if (i % (subDivisions/2) === 0) {
- height = 18;
+ height = CORNER_SIZE * 0.5;
  } else if (i % (subDivisions/4) === 0) {
- height = 12;
+ height = CORNER_SIZE * 0.35;
  }
 
  // Skip ticks in the corner intersection zone (first 1cm)
