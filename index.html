@@ -75,12 +75,12 @@
  <!-- Ruler Area -->
  <main class="flex-grow relative bg-white dark:bg-dark-bg overflow-hidden transition-colors duration-200">
  <!-- Vertical Ruler Container -->
- <div id="ruler-v" class="absolute left-0 top-0 bottom-0 w-12 border-r border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200"></div>
+ <div id="ruler-v" class="absolute left-0 top-0 bottom-0 border-r border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200" style="width: 1cm;"></div>
  <!-- Horizontal Ruler Container -->
- <div id="ruler-h" class="absolute top-0 left-0 right-0 h-12 border-b border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200"></div>
+ <div id="ruler-h" class="absolute top-0 left-0 right-0 border-b border-gray-100 dark:border-dark-border bg-gray-50/30 dark:bg-white/5 transition-colors duration-200" style="height: 1cm;"></div>
  
  <!-- Center intersection helper -->
- <div class="absolute top-0 left-0 w-12 h-12 bg-gray-100/50 dark:bg-white/10 z-10 border-b border-r border-gray-200 dark:border-dark-border transition-colors duration-200"></div>
+ <div id="ruler-corner" class="absolute top-0 left-0 bg-gray-100/50 dark:bg-white/10 z-10 border-b border-r border-gray-200 dark:border-dark-border transition-colors duration-200" style="width: 1cm; height: 1cm;"></div>
  </main>
 
  <!-- Calibration Footer -->
@@ -191,9 +191,15 @@
  }
  }
 
+ // Get 1cm in pixels based on current PPI
+ function getCmInPixels() {
+ const cssPPI = (state.ppi / state.dpr) * state.manualScale;
+ return cssPPI / 2.54; // 1 inch = 2.54cm
+ }
+
  function draw(container, unitPx, limit, isVertical, subDivisions) {
- // Corner zone size (matches the intersection helper div)
- const CORNER_SIZE = 12;
+ // Corner zone size (1cm)
+ const CORNER_SIZE = getCmInPixels();
  
  for (let i = 0; i <= (limit / unitPx); i++) {
  const pos = i * unitPx;
@@ -211,10 +217,10 @@
  label.className = `label ${isVertical ? 'v-label' : 'h-label'}`;
  if (isVertical) {
  label.style.top = `${pos}px`;
- label.style.left = '35px';
+ label.style.left = `${CORNER_SIZE + 8}px`;
  } else {
  label.style.left = `${pos}px`;
- label.style.top = '35px';
+ label.style.top = `${CORNER_SIZE + 8}px`;
  }
  label.innerText = i / subDivisions;
  container.appendChild(label);
@@ -225,7 +231,7 @@
  height = 12;
  }
 
- // Skip ticks in the corner intersection zone (first 12px)
+ // Skip ticks in the corner intersection zone (first 1cm)
  // This creates a clean carpenter's square corner
  if (pos < CORNER_SIZE) {
  continue;
