@@ -205,41 +205,44 @@
  const pos = i * unitPx;
  if (pos > limit) break;
 
- let height = 8;
- let isMajor = false;
-
- if (i % subDivisions === 0) {
- height = CORNER_SIZE * 0.7; // Tick height proportional to ruler width
- isMajor = true;
- // Skip label for 0 to keep it clean
- if (i > 0) {
- const label = document.createElement('div');
- label.className = `label ${isVertical ? 'v-label' : 'h-label'}`;
- if (isVertical) {
- label.style.top = `${pos}px`;
- label.style.right = '2px';
- label.style.left = 'auto';
- } else {
- label.style.left = `${pos}px`;
- label.style.bottom = '2px';
- label.style.top = 'auto';
- }
- label.innerText = i / subDivisions;
- container.appendChild(label);
- }
- } else if (i % (subDivisions/2) === 0) {
- height = CORNER_SIZE * 0.5;
- } else if (i % (subDivisions/4) === 0) {
- height = CORNER_SIZE * 0.35;
- }
-
  // Skip ticks in the corner intersection zone (first 1cm)
- // This creates a clean carpenter's square corner
  if (pos < CORNER_SIZE) {
  continue;
  }
 
- container.appendChild(createTick(isVertical, pos, height, isMajor));
+ let tickLen = 6;
+ let isMajor = false;
+
+ if (i % subDivisions === 0) {
+ tickLen = CORNER_SIZE * 0.85; // Major ticks almost full width
+ isMajor = true;
+ // Add label for major ticks (skip 0)
+ if (i > 0) {
+ const label = document.createElement('div');
+ label.className = 'label';
+ label.innerText = i / subDivisions;
+ if (isVertical) {
+ // Vertical ruler: label rotated, centered in the ruler width
+ label.style.writingMode = 'vertical-rl';
+ label.style.transform = 'rotate(180deg)';
+ label.style.top = `${pos}px`;
+ label.style.left = '50%';
+ label.style.transform = 'translate(-50%, -50%) rotate(180deg)';
+ } else {
+ // Horizontal ruler: label centered below tick
+ label.style.left = `${pos}px`;
+ label.style.top = '50%';
+ label.style.transform = 'translate(-50%, -50%)';
+ }
+ container.appendChild(label);
+ }
+ } else if (i % (subDivisions/2) === 0) {
+ tickLen = CORNER_SIZE * 0.6;
+ } else if (i % (subDivisions/4) === 0) {
+ tickLen = CORNER_SIZE * 0.4;
+ }
+
+ container.appendChild(createTick(isVertical, pos, tickLen, isMajor));
  }
  }
 
