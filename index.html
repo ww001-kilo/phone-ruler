@@ -87,11 +87,8 @@
  <svg id="moon-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-moon"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
  <svg id="sun-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sun hidden"><circle cx="12" cy="12" r="4"/><path d="M12 2v2"/><path d="M12 20v2"/><path d="m4.93 4.93 1.41 1.41"/><path d="m17.66 17.66 1.41 1.41"/><path d="M2 12h2"/><path d="M20 12h2"/><path d="m6.34 17.66-1.41 1.41"/><path d="m19.07 4.93-1.41 1.41"/></svg>
  </button>
- <button onclick="toggleUnits()" id="unit-btn" class="px-4 py-1.5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-full text-xs font-bold shadow-sm active:scale-95 transition-transform">
+ <button onclick="toggleUnits()" id="unit-btn" class="w-14 py-1.5 bg-gray-900 dark:bg-white dark:text-gray-900 text-white rounded-full text-xs font-bold shadow-sm active:scale-95 transition-transform text-center">
  cm
- </button>
- <button onclick="toggleRectPanel()" class="px-3 py-1.5 bg-blue-600 text-white rounded-full text-xs font-bold shadow-sm active:scale-95 transition-transform">
- Rectangles
  </button>
  </div>
  </header>
@@ -107,12 +104,16 @@
  <div class="absolute top-0 left-0 w-12 h-12 bg-gray-100/50 dark:bg-white/10 z-10 border-b border-r border-gray-200 dark:border-dark-border transition-colors duration-200"></div>
  <div id="rect-overlay" class="rect-overlay"></div>
 
- <section id="rect-panel" class="hidden absolute left-14 right-3 bottom-3 p-2 bg-white/95 dark:bg-dark-surface/95 border border-gray-200 dark:border-dark-border rounded-lg z-20 backdrop-blur-sm">
+ <button onclick="toggleRectPanel()" id="rect-toggle-btn" class="absolute right-3 bottom-3 z-20 px-4 py-3 bg-blue-600 text-white rounded-full text-sm font-bold shadow-lg active:scale-95 transition-transform">
+ Rectangles
+ </button>
+
+ <section id="rect-panel" class="hidden absolute left-14 right-3 bottom-16 p-2 bg-white/95 dark:bg-dark-surface/95 border border-gray-200 dark:border-dark-border rounded-lg z-20 backdrop-blur-sm">
  <div class="flex gap-2 items-center">
- <input id="rect-w" type="number" step="0.1" placeholder="W" class="w-14 px-2 py-1 text-xs border rounded dark:bg-gray-800">
- <input id="rect-h" type="number" step="0.1" placeholder="H" class="w-14 px-2 py-1 text-xs border rounded dark:bg-gray-800">
+ <input id="rect-w" type="number" step="1" placeholder="W" class="w-16 px-2 py-1 text-xs border rounded dark:bg-gray-800">
+ <input id="rect-h" type="number" step="1" placeholder="H" class="w-16 px-2 py-1 text-xs border rounded dark:bg-gray-800">
  <button onclick="addRectangle()" class="px-3 py-1 bg-blue-600 text-white rounded text-xs">Add</button>
- <span id="rect-unit" class="text-xs text-gray-500">cm</span>
+ <span id="rect-unit" class="text-xs text-gray-500">mm</span>
  </div>
  <div id="rect-list" class="mt-2 text-xs space-y-1 max-h-24 overflow-auto"></div>
  </section>
@@ -185,7 +186,7 @@
  function toggleUnits() {
  state.isMetric = !state.isMetric;
  document.getElementById('unit-btn').innerText = state.isMetric ? 'cm' : 'in';
- document.getElementById('rect-unit').innerText = state.isMetric ? 'cm' : 'in';
+ document.getElementById('rect-unit').innerText = state.isMetric ? 'mm' : 'in';
  renderRulers();
  }
 
@@ -286,8 +287,8 @@
  const w = parseFloat(document.getElementById('rect-w').value);
  const h = parseFloat(document.getElementById('rect-h').value);
  if (!w || !h || w <= 0 || h <= 0) return;
- const wIn = state.isMetric ? (w / 2.54) : w;
- const hIn = state.isMetric ? (h / 2.54) : h;
+ const wIn = state.isMetric ? (w / 25.4) : w;
+ const hIn = state.isMetric ? (h / 25.4) : h;
  state.rectangles.push({ id: Date.now(), wIn, hIn });
  document.getElementById('rect-w').value = '';
  document.getElementById('rect-h').value = '';
@@ -306,15 +307,15 @@
  state.rectangles.forEach((r, idx) => {
  const el = document.createElement('div');
  el.className = 'compare-rect';
- el.style.left = `${60 + idx * 18}px`;
- el.style.top = `${60 + idx * 18}px`;
+ el.style.left = `60px`;
+ el.style.top = `60px`;
  el.style.width = `${r.wIn * ppi}px`;
  el.style.height = `${r.hIn * ppi}px`;
  const label = document.createElement('div');
  label.className = 'compare-label';
- const w = state.isMetric ? (r.wIn * 2.54).toFixed(1) : r.wIn.toFixed(2);
- const h = state.isMetric ? (r.hIn * 2.54).toFixed(1) : r.hIn.toFixed(2);
- label.innerText = `${w} × ${h} ${state.isMetric ? 'cm' : 'in'}`;
+ const w = state.isMetric ? (r.wIn * 25.4).toFixed(0) : r.wIn.toFixed(2);
+ const h = state.isMetric ? (r.hIn * 25.4).toFixed(0) : r.hIn.toFixed(2);
+ label.innerText = `${w} × ${h} ${state.isMetric ? 'mm' : 'in'}`;
  el.appendChild(label);
  overlay.appendChild(el);
  });
@@ -325,10 +326,10 @@
  list.innerHTML = '';
  state.rectangles.forEach((r) => {
  const row = document.createElement('div');
- const w = state.isMetric ? (r.wIn * 2.54).toFixed(1) : r.wIn.toFixed(2);
- const h = state.isMetric ? (r.hIn * 2.54).toFixed(1) : r.hIn.toFixed(2);
+ const w = state.isMetric ? (r.wIn * 25.4).toFixed(0) : r.wIn.toFixed(2);
+ const h = state.isMetric ? (r.hIn * 25.4).toFixed(0) : r.hIn.toFixed(2);
  row.className = 'flex justify-between items-center';
- row.innerHTML = `<span>${w} × ${h} ${state.isMetric ? 'cm' : 'in'}</span><button class="text-red-500" onclick="removeRectangle(${r.id})">Remove</button>`;
+ row.innerHTML = `<span>${w} × ${h} ${state.isMetric ? 'mm' : 'in'}</span><button class="text-red-500" onclick="removeRectangle(${r.id})">Remove</button>`;
  list.appendChild(row);
  });
  }
