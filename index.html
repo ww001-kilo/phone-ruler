@@ -57,13 +57,15 @@
  }
  .compare-label {
  position: absolute;
- left: 0;
  font-size: 10px;
  color: white;
  background: var(--rect-color, #2563eb);
  padding: 2px 6px;
  border-radius: 6px;
  white-space: nowrap;
+ max-width: calc(100% - 6px);
+ overflow: hidden;
+ text-overflow: ellipsis;
  }
  .safe-bottom {
  bottom: calc(12px + env(safe-area-inset-bottom));
@@ -326,10 +328,15 @@
  el.style.height = `${r.hIn * ppi}px`;
  const label = document.createElement('div');
  label.className = 'compare-label';
- label.style.top = `${-18 - (idx * 19)}px`;
  const w = state.isMetric ? (r.wIn * 25.4).toFixed(0) : r.wIn.toFixed(2);
  const h = state.isMetric ? (r.hIn * 25.4).toFixed(0) : r.hIn.toFixed(2);
  label.innerText = `${w} × ${h} ${state.isMetric ? 'mm' : 'in'}`;
+
+ // Put labels inside each rectangle and avoid overlap by stacking with 1px gap
+ const labelHeight = 16;
+ label.style.left = '3px';
+ label.style.top = `${3 + (idx * (labelHeight + 1))}px`;
+
  el.appendChild(label);
  overlay.appendChild(el);
  });
