@@ -68,10 +68,10 @@
  text-overflow: ellipsis;
  }
  .safe-bottom {
- bottom: calc(12px + env(safe-area-inset-bottom));
+ bottom: calc(20px + env(safe-area-inset-bottom));
  }
  .safe-bottom-panel {
- bottom: calc(68px + env(safe-area-inset-bottom));
+ bottom: calc(84px + env(safe-area-inset-bottom));
  }
  /* Light mode */
  html:not(.dark) .tick { background-color: #1f2937; }
@@ -112,10 +112,10 @@
  <div class="absolute top-0 left-0 w-12 h-12 bg-gray-100/50 dark:bg-white/10 z-10 border-b border-r border-gray-200 dark:border-dark-border transition-colors duration-200"></div>
  <div id="rect-overlay" class="rect-overlay"></div>
 
- <button onclick="toggleRectPanel()" id="rect-toggle-btn" aria-label="Toggle rectangles" class="absolute right-3 safe-bottom z-20 w-11 h-11 bg-blue-600 text-white rounded-full shadow-lg active:scale-95 transition-transform flex items-center justify-center">
+ <button onclick="toggleRectPanel()" id="rect-toggle-btn" aria-label="Toggle rectangles" class="absolute right-5 safe-bottom z-20 w-11 h-11 bg-blue-600 text-white rounded-full shadow-lg active:scale-95 transition-transform flex items-center justify-center">
  <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
- <rect x="3" y="3" width="18" height="18" rx="2"></rect>
- <rect x="8" y="8" width="8" height="8" rx="1"></rect>
+ <rect x="4" y="7" width="12" height="12" rx="2"></rect>
+ <path d="M8 5h10a2 2 0 0 1 2 2v10"></path>
  </svg>
  </button>
 
