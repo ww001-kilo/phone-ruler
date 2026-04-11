@@ -124,7 +124,7 @@
  <button onclick="addRectangle()" class="h-11 px-4 bg-blue-600 text-white rounded-lg text-sm font-semibold">Add</button>
  <span id="rect-unit" class="text-sm text-gray-500 dark:text-gray-300">mm</span>
  </div>
- <div id="rect-list" class="mt-2 text-sm space-y-1 max-h-24 overflow-auto"></div>
+ <div id="rect-list" class="mt-2 text-sm space-y-1"></div>
  </section>
  </main>
 
@@ -298,6 +298,7 @@
  const w = parseFloat(document.getElementById('rect-w').value);
  const h = parseFloat(document.getElementById('rect-h').value);
  if (!w || !h || w <= 0 || h <= 0) return;
+ if (state.rectangles.length >= 5) return;
  const wIn = state.isMetric ? (w / 25.4) : w;
  const hIn = state.isMetric ? (h / 25.4) : h;
  state.rectangles.push({ id: Date.now(), wIn, hIn, color: RECT_COLORS[state.rectangles.length % RECT_COLORS.length] });
@@ -325,7 +326,7 @@
  el.style.height = `${r.hIn * ppi}px`;
  const label = document.createElement('div');
  label.className = 'compare-label';
- label.style.top = `${-18 - (idx * 18)}px`;
+ label.style.top = `${-18 - (idx * 19)}px`;
  const w = state.isMetric ? (r.wIn * 25.4).toFixed(0) : r.wIn.toFixed(2);
  const h = state.isMetric ? (r.hIn * 25.4).toFixed(0) : r.hIn.toFixed(2);
  label.innerText = `${w} × ${h} ${state.isMetric ? 'mm' : 'in'}`;
