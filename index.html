@@ -65,6 +65,12 @@
  padding: 1px 4px;
  border-radius: 4px;
  }
+ .safe-bottom {
+ bottom: calc(12px + env(safe-area-inset-bottom));
+ }
+ .safe-bottom-panel {
+ bottom: calc(68px + env(safe-area-inset-bottom));
+ }
  /* Light mode */
  html:not(.dark) .tick { background-color: #1f2937; }
  html:not(.dark) .label { color: #4b5563; }
@@ -104,11 +110,11 @@
  <div class="absolute top-0 left-0 w-12 h-12 bg-gray-100/50 dark:bg-white/10 z-10 border-b border-r border-gray-200 dark:border-dark-border transition-colors duration-200"></div>
  <div id="rect-overlay" class="rect-overlay"></div>
 
- <button onclick="toggleRectPanel()" id="rect-toggle-btn" class="absolute right-3 bottom-3 z-20 px-4 py-3 bg-blue-600 text-white rounded-full text-sm font-bold shadow-lg active:scale-95 transition-transform">
+ <button onclick="toggleRectPanel()" id="rect-toggle-btn" class="absolute right-3 safe-bottom z-20 px-4 py-3 bg-blue-600 text-white rounded-full text-sm font-bold shadow-lg active:scale-95 transition-transform">
  Rectangles
  </button>
 
- <section id="rect-panel" class="hidden absolute left-14 right-3 bottom-16 p-2 bg-white/95 dark:bg-dark-surface/95 border border-gray-200 dark:border-dark-border rounded-lg z-20 backdrop-blur-sm">
+ <section id="rect-panel" class="hidden absolute left-14 right-3 safe-bottom-panel p-2 bg-white/95 dark:bg-dark-surface/95 border border-gray-200 dark:border-dark-border rounded-lg z-20 backdrop-blur-sm">
  <div class="flex gap-2 items-center">
  <input id="rect-w" type="number" step="1" placeholder="W" class="w-16 px-2 py-1 text-xs border rounded dark:bg-gray-800">
  <input id="rect-h" type="number" step="1" placeholder="H" class="w-16 px-2 py-1 text-xs border rounded dark:bg-gray-800">
